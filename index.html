@@ -2,993 +2,232 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lee Lewis Introductions</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>John Troutman Intros</title>
 <style>
-  :root {
-    --ink: #1a1612;
-    --parchment: #f5f0e8;
-    --cream: #faf7f2;
-    --gold: #b8892a;
-    --gold-light: #e8d5a3;
-    --rust: #c0522a;
-    --teal: #2a6b6e;
-    --muted: #7a6e62;
-    --border: #d8cfc0;
-    --card-bg: #ffffff;
-    --status-yours: #2a6b6e;
-    --status-theirs: #b8892a;
-    --status-done: #4a7c52;
-    --status-warn: #c0522a;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--parchment);
-    color: var(--ink);
-    min-height: 100vh;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--ink);
-    padding: 36px 48px 32px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 60px,
-      rgba(184,137,42,0.06) 60px,
-      rgba(184,137,42,0.06) 61px
-    );
-  }
-  .header-inner { position: relative; z-index: 1; }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    color: var(--parchment);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-  .header h1 span { color: var(--gold); }
-  .header-meta {
-    margin-top: 10px;
-    color: var(--gold-light);
-    font-size: 0.85rem;
-    font-weight: 300;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .stats-bar {
-    display: flex;
-    gap: 32px;
-    margin-top: 24px;
-    flex-wrap: wrap;
-  }
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    color: var(--gold);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.72rem;
-    color: rgba(245,240,232,0.6);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  /* FILTERS */
-  .controls {
-    padding: 20px 48px;
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .filter-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-right: 4px;
-  }
-  .filter-btn {
-    padding: 6px 16px;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 2px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--ink);
-  }
-  .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .filter-btn.active { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
-
-  /* MAIN */
-  .main { padding: 36px 48px; }
-
-  /* CARDS */
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    margin-bottom: 20px;
-    transition: box-shadow 0.2s;
-    animation: fadeUp 0.35s ease both;
-  }
-  .card:hover { box-shadow: 0 4px 24px rgba(26,22,18,0.09); }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .card.hidden { display: none; }
-
-  .card-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: start;
-    padding: 22px 26px 18px;
-    border-bottom: 1px solid var(--border);
-    gap: 16px;
-    cursor: pointer;
-  }
-  .card-header:hover .expand-icon { color: var(--gold); }
-
-  .person-info { display: flex; flex-direction: column; gap: 4px; }
-  .person-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-  .person-title {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-weight: 300;
-  }
-  .person-email {
-    font-size: 0.75rem;
-    color: var(--gold);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-  }
-
-  .card-badges {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border-radius: 2px;
-  }
-  .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
-  .badge-yours { background: rgba(42,107,110,0.1); color: var(--status-yours); }
-  .badge-yours .badge-dot { background: var(--status-yours); }
-  .badge-theirs { background: rgba(184,137,42,0.1); color: var(--status-theirs); }
-  .badge-theirs .badge-dot { background: var(--status-theirs); }
-  .badge-done { background: rgba(74,124,82,0.1); color: var(--status-done); }
-  .badge-done .badge-dot { background: var(--status-done); }
-  .badge-warn { background: rgba(192,82,42,0.1); color: var(--status-warn); }
-  .badge-warn .badge-dot { background: var(--status-warn); }
-
-  .date-badge {
-    font-size: 0.7rem;
-    color: var(--muted);
-    text-align: right;
-    font-weight: 300;
-  }
-
-  .expand-icon {
-    font-size: 1rem;
-    color: var(--muted);
-    transition: transform 0.2s, color 0.2s;
-    align-self: center;
-  }
-  .card.expanded .expand-icon { transform: rotate(180deg); }
-
-  /* CARD BODY */
-  .card-body {
-    display: none;
-  }
-  .card.expanded .card-body { display: block; }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-section {
-    padding: 20px 26px;
-  }
-  .card-section:first-child { border-right: 1px solid var(--border); }
-
-  .section-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-  .section-text {
-    font-size: 0.875rem;
-    line-height: 1.65;
-    color: var(--ink);
-    font-weight: 300;
-  }
-  .section-text strong { font-weight: 500; color: var(--ink); }
-
-  /* TIMELINE */
-  .card-timeline {
-    padding: 18px 26px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 0;
-    overflow-x: auto;
-  }
-  .timeline-event {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 90px;
-    position: relative;
-    padding: 0 6px;
-  }
-  .timeline-event:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: calc(50% + 8px);
-    width: calc(100% - 8px);
-    height: 1px;
-    background: var(--border);
-  }
-  .timeline-dot {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--border);
-    border: 2px solid var(--card-bg);
-    z-index: 1;
-    flex-shrink: 0;
-    margin-bottom: 6px;
-  }
-  .timeline-dot.you { background: var(--teal); }
-  .timeline-dot.them { background: var(--gold); }
-  .timeline-dot.lee { background: var(--ink); }
-  .timeline-date { font-size: 0.6rem; color: var(--muted); text-align: center; line-height: 1.3; }
-  .timeline-who { font-size: 0.65rem; font-weight: 500; color: var(--ink); text-align: center; margin-top: 2px; }
-
-  /* DRAFT */
-  .card-draft { padding: 20px 26px; }
-  .draft-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  .draft-title {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  .copy-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    background: var(--ink);
-    color: var(--parchment);
-    border: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.15s;
-    border-radius: 1px;
-  }
-  .copy-btn:hover { background: var(--gold); }
-  .copy-btn.copied { background: var(--status-done); }
-
-  .draft-box {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    padding: 18px;
-    font-size: 0.83rem;
-    line-height: 1.75;
-    color: var(--ink);
-    white-space: pre-wrap;
-    font-weight: 300;
-    position: relative;
-  }
-
-  /* NEW BADGE */
-  .new-tag {
-    background: var(--rust);
-    color: white;
-    font-size: 0.6rem;
-    padding: 2px 7px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
-    border-radius: 1px;
-  }
-
-  @media (max-width: 768px) {
-    .header { padding: 24px 20px; }
-    .header h1 { font-size: 1.6rem; }
-    .main, .controls { padding: 20px; }
-    .card-grid { grid-template-columns: 1fr; }
-    .card-section:first-child { border-right: none; border-bottom: 1px solid var(--border); }
-  }
+:root {
+  --ink: #0f1a2e;
+  --bg: #eef2f7;
+  --card: #fff;
+  --blue: #2356a8;
+  --blue-pale: #dce8f8;
+  --teal: #1a7a6e;
+  --rust: #c04a28;
+  --gold: #b07d2a;
+  --muted: #6a7a8e;
+  --border: #d0d8e4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  font-family: -apple-system, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+.hdr {
+  background: var(--ink);
+  padding: env(safe-area-inset-top, 0) 20px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+.hdr-inner { padding: 18px 0 0; }
+.hdr h1 { font-size: 1.3rem; color: #eef2f7; line-height: 1.15; font-weight: 700; }
+.hdr h1 em { color: #6fa3ef; font-style: normal; }
+.hdr-sub { font-size: 0.68rem; color: rgba(220,232,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; margin-bottom: 14px; }
+.stats { display: flex; border-top: 1px solid rgba(255,255,255,0.08); }
+.stat { flex: 1; padding: 10px 0; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+.stat:last-child { border-right: none; }
+.stat-n { font-size: 1.4rem; color: #6fa3ef; line-height: 1; font-weight: 700; }
+.stat-l { font-size: 0.58rem; color: rgba(220,232,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.filters { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.fp { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; font-size: 0.75rem; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap; -webkit-appearance: none; }
+.fp.active { background: var(--ink); border-color: var(--ink); color: #eef2f7; }
+.list { padding: 12px 16px 60px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
+.card.hidden { display: none; }
+.card.open { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+.card-top { padding: 16px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.avatar { width: 44px; height: 44px; border-radius: 10px; background: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: #6fa3ef; flex-shrink: 0; }
+.card-info { flex: 1; min-width: 0; }
+.card-name { font-size: 1rem; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-org { font-size: 0.72rem; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-date { font-size: 0.65rem; color: var(--muted); margin-top: 5px; }
+.card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.pill-dot { width: 5px; height: 5px; border-radius: 50%; }
+.pill-yours { background: rgba(192,74,40,0.12); color: var(--rust); }
+.pill-yours .pill-dot { background: var(--rust); }
+.pill-theirs { background: rgba(176,125,42,0.12); color: var(--gold); }
+.pill-theirs .pill-dot { background: var(--gold); }
+.pill-active { background: rgba(26,122,110,0.1); color: var(--teal); }
+.pill-active .pill-dot { background: var(--teal); }
+.pill-scheduled { background: rgba(35,86,168,0.1); color: var(--blue); }
+.pill-scheduled .pill-dot { background: var(--blue); }
+.chevron { font-size: 0.9rem; color: var(--muted); transition: transform 0.2s; align-self: center; display: inline-block; }
+.card.open .chevron { transform: rotate(180deg); }
+.card-body { display: none; border-top: 1px solid var(--border); }
+.card.open .card-body { display: block; }
+.section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.slabel { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 700; margin-bottom: 6px; }
+.stext { font-size: 0.82rem; line-height: 1.65; color: var(--ink); }
+.stext strong { font-weight: 700; }
+.tl { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+.tl::-webkit-scrollbar { display: none; }
+.tl-ev { display: flex; flex-direction: column; align-items: center; min-width: 68px; position: relative; padding: 0 4px; }
+.tl-ev:not(:last-child)::after { content: ""; position: absolute; top: 7px; left: calc(50% + 7px); width: calc(100% - 6px); height: 1px; background: var(--border); }
+.tl-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--border); z-index: 1; flex-shrink: 0; margin-bottom: 5px; }
+.tl-dot.you { background: var(--teal); }
+.tl-dot.them { background: var(--gold); }
+.tl-dot.john { background: var(--ink); }
+.tl-dot.sched { background: var(--blue); }
+.tl-date { font-size: 0.58rem; color: var(--muted); text-align: center; line-height: 1.3; }
+.tl-who { font-size: 0.6rem; font-weight: 600; color: var(--ink); text-align: center; margin-top: 2px; }
+.draft-section { padding: 14px 16px; }
+.draft-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.copy-btn { padding: 9px 20px; min-height: 38px; background: var(--ink); color: #eef2f7; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
+.copy-btn.copied { background: var(--teal); }
+.draft-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; font-size: 0.8rem; line-height: 1.75; color: var(--ink); white-space: pre-wrap; }
+.new-tag { display: inline-block; background: var(--rust); color: white; font-size: 0.55rem; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+.urgent-tag { display: inline-block; background: var(--blue); color: white; font-size: 0.55rem; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; vertical-align: middle; margin-left: 4px; }
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-inner">
-    <h1>Introductions via <span>Lee Lewis</span></h1>
-    <div class="header-meta">Health Transformation Alliance · CSO & GM Medical</div>
-    <div class="stats-bar">
-      <div class="stat"><span class="stat-num" id="total-count">15</span><span class="stat-label">Total Intros</span></div>
-      <div class="stat"><span class="stat-num" id="yours-count">-</span><span class="stat-label">Your Turn</span></div>
-      <div class="stat"><span class="stat-num" id="theirs-count">-</span><span class="stat-label">Their Turn</span></div>
-      <div class="stat"><span class="stat-num" id="active-count">-</span><span class="stat-label">Active</span></div>
-    </div>
+<div class="hdr">
+  <div class="hdr-inner">
+    <h1>Intros via <em>John Troutman</em></h1>
+    <div class="hdr-sub">MindClub America · VP Business Development</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n" id="sc-yours">-</div><div class="stat-l">Your Turn</div></div>
+    <div class="stat"><div class="stat-n" id="sc-theirs">-</div><div class="stat-l">Theirs</div></div>
+    <div class="stat"><div class="stat-n" id="sc-active">-</div><div class="stat-l">Active</div></div>
   </div>
 </div>
-
-<div class="controls">
-  <span class="filter-label">Filter:</span>
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="yours">Your Turn</button>
-  <button class="filter-btn" data-filter="theirs">Their Turn</button>
-  <button class="filter-btn" data-filter="active">Active</button>
-  <button class="filter-btn" data-filter="new">New (Not in CSV)</button>
+<div class="filters">
+  <button class="fp active" data-f="all">All</button>
+  <button class="fp" data-f="yours">Your Turn</button>
+  <button class="fp" data-f="theirs">Their Turn</button>
+  <button class="fp" data-f="active">Active</button>
+  <button class="fp" data-f="scheduled">Scheduled</button>
 </div>
-
-<div class="main" id="cards-container"></div>
-
+<div class="list" id="list"></div>
 <script>
-const contacts = [
-  {
-    id: 1,
-    name: "Justin Leader",
-    title: "President & CEO, BenefitsDNA",
-    email: "jleader@benefitsdna.com",
-    introduced: "Jan 15, 2026",
-    introducer: "Lee Lewis",
-    why: "Top benefits consultant working with jumbo and midmarket employers in the Northeast. Lee suggested you as a potential speaker at his Elevated Insights 2026 conference (May) and as a service provider for his employer groups. You're already on a shared MindClub call.",
-    responded: true,
-    lastEmail: "Apr 17, 2026",
-    lastActor: "you",
-    turn: "yours",
-    turnNote: "Meeting was scheduled Apr 22 but Justin canceled (sick kid). You haven't rescheduled.",
-    isNew: false,
-    timeline: [
-      { date: "Jan 15", who: "Lee", cls: "lee" },
-      { date: "Jan 16", who: "Justin", cls: "them" },
-      { date: "Apr 13", who: "You", cls: "you" },
-      { date: "Apr 13", who: "Justin", cls: "them" },
-      { date: "Apr 17", who: "You", cls: "you" },
-      { date: "Apr 22", who: "Canceled", cls: "" },
-    ],
-    draft: `Hi Justin,
-
-I hope you and your little one are feeling better after the April scare! I'm reaching out to finally get us on the calendar. Life has been a bit of a whirlwind on both ends, but I would love to find a time to connect properly.
-
-As we're on the MindClub calls together now, I think there's a lot of natural alignment worth exploring — both on the partnership side and on the speaking opportunity you mentioned.
-
-Please feel free to grab any time that works for you here: [Calendly link]
-
-Looking forward to finally connecting!
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 2,
-    name: "Reed McBride",
-    title: "Partner, Mintaka VC",
-    email: "reed@mintakavc.com",
-    introduced: "Nov 20, 2025",
-    introducer: "Lee Lewis",
-    why: "Early-stage healthcare VC; formerly at Carta where he standardized equity and compensation frameworks. Has capital and strategic interest in companies in Lee's orbit. Potential investor for Enthea — he's already asked to see your current deck.",
-    responded: true,
-    lastEmail: "Apr 13, 2026",
-    lastActor: "them",
-    turn: "yours",
-    turnNote: "Reed replied Apr 13 asking for your current deck. You haven't sent it.",
-    isNew: false,
-    timeline: [
-      { date: "Nov 20", who: "Lee", cls: "lee" },
-      { date: "Nov 21", who: "Reed", cls: "them" },
-      { date: "Dec 10", who: "You", cls: "you" },
-      { date: "Apr 13", who: "You", cls: "you" },
-      { date: "Apr 13", who: "Reed ✉", cls: "them" },
-    ],
-    draft: `Hi Reed,
-
-So sorry for the delay in getting back to you — I wanted to make sure I was sending you the most current version of everything. Please find our deck attached.
-
-I'd love to walk you through it and answer any questions you might have. I'm particularly excited about where we are right now in terms of traction and the employer pipeline through the Theralta network.
-
-Feel free to grab time here: [Calendly link] — or just reply with a few windows that work and I'll send something over.
-
-Looking forward to it!
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 3,
-    name: "Katie Tenney",
-    title: "Director, Community Engagement & Advisory Programs, Lantern",
-    email: "katie.tenney@lanterncare.com",
-    introduced: "Oct 2, 2025",
-    introducer: "Lee Lewis",
-    why: "Runs the Aspen retreat programming at Lantern. Lee positioned you as an ideal speaker for a 'future of care' panel in Aspen and gave a strong endorsement based on your prior employer-facing presentations. This is a high-visibility speaking opportunity.",
-    responded: true,
-    lastEmail: "Dec 6, 2025",
-    lastActor: "you",
-    turn: "theirs",
-    turnNote: "You followed up Dec 6 with a second Calendly nudge. No response from Katie since.",
-    isNew: false,
-    timeline: [
-      { date: "Oct 2", who: "Lee", cls: "lee" },
-      { date: "Nov 14", who: "Lee again", cls: "lee" },
-      { date: "Nov 21", who: "You", cls: "you" },
-      { date: "Dec 6", who: "You ×2", cls: "you" },
-    ],
-    draft: `Hi Katie,
-
-I hope you're doing well! I wanted to follow up one more time on the Aspen panel conversation — I know things get busy and inboxes fill up fast.
-
-I remain genuinely excited about the possibility of participating and would love to find a time to connect, even briefly, to learn more about the programming and see if there's a fit.
-
-If it's easier, please feel free to grab time directly here: [Calendly link]
-
-No pressure at all — just wanted to make sure this didn't fall through the cracks on my end!
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 4,
-    name: "David Kraus & Mike Thompson",
-    title: "Outcome Referrals — Behavioral Health Research & TOP Match",
-    email: "David.Kraus@outcomereferrals.com · mjthompson56@gmail.com",
-    introduced: "Sep 5, 2025",
-    introducer: "Lee Lewis",
-    why: "Built TOP Match / Express Access — one of the most rigorously validated patient-therapy matching systems in behavioral health, published and funded by NIH and PCORI. Used by employers, health plans, EAPs and Talkspace. Lee connected them to explore outcomes validation and independent clinical proof points for Enthea's therapies in employer settings.",
-    responded: true,
-    lastEmail: "Nov 18, 2025",
-    lastActor: "you",
-    turn: "theirs",
-    turnNote: "You apologized for delays Nov 18 and re-engaged with enthusiasm. No reply since.",
-    isNew: false,
-    timeline: [
-      { date: "Sep 5", who: "Lee", cls: "lee" },
-      { date: "Sep 7", who: "Mike", cls: "them" },
-      { date: "Sep 8", who: "You", cls: "you" },
-      { date: "Sep 16", who: "Margaret", cls: "them" },
-      { date: "Nov 18", who: "You", cls: "you" },
-    ],
-    draft: `Hi Margaret, David, and Mike,
-
-I wanted to reach out again to see if we can finally get a follow-up call on the calendar. I left our first conversation genuinely energized, and I apologize that things have been so stop-and-start on my end.
-
-Things have calmed down considerably, and I am very much ready to dig into what a collaboration might look like — whether around outcomes validation, proof points for employer adoption, or any other dimension you see as a fit.
-
-Would any of you have 30 minutes in the next few weeks? I'm happy to work around your schedules.
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 5,
-    name: "Karlene Lucas",
-    title: "Director of Education & Events, National Alliance of Healthcare Purchaser Coalitions",
-    email: "klucas@nationalalliancehealth.org",
-    introduced: "Jul 16, 2025",
-    introducer: "Lee Lewis",
-    why: "Runs programming for National Alliance convenings, including the November innovator panel — a high-visibility speaking opportunity for employer-facing mental health innovators. Lee re-connected you specifically for an innovator panel slot.",
-    responded: true,
-    lastEmail: "Jul 17, 2025",
-    lastActor: "them",
-    turn: "active",
-    turnNote: "Karlene confirmed a call on Jul 25. No further emails visible — likely connected.",
-    isNew: false,
-    timeline: [
-      { date: "Jul 16", who: "Lee", cls: "lee" },
-      { date: "Jul 17", who: "You", cls: "you" },
-      { date: "Jul 17", who: "Karlene ✓", cls: "them" },
-    ],
-    draft: `Hi Karlene,
-
-I hope you've been well since we last connected! I wanted to follow up on the National Alliance innovator panel we discussed.
-
-As things continue to evolve at Enthea — including new employer partnerships and expanding access to advanced behavioral health therapies — I'm more excited than ever about the opportunity to present to the National Alliance community.
-
-Could you share an update on the timeline for the upcoming program? I want to make sure I have you in the loop on anything that would be relevant for your panel selection.
-
-Looking forward to reconnecting!
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 6,
-    name: "Brian & Kristen Melanson",
-    title: "Founder/COO, M4 Innovation (4mul8 Conference, Jackson Hole)",
-    email: "brian@m4innovation.com · kristen@m4innovation.com",
-    introduced: "Sep 4, 2025",
-    introducer: "Lee Lewis",
-    why: "Run 4mul8, a private, referral-only leadership convening in Jackson Hole (Oct 27–30) built for deep peer dialogue — no slides, no exhibit halls, small cohorts, curated 1:1 connections. Ideal for high-level employer and clinical relationship-building. Lee got you invited into the employer/clinical cohort.",
-    responded: true,
-    lastEmail: "Sep 9, 2025",
-    lastActor: "you",
-    turn: "active",
-    turnNote: "Kristen confirmed logistics follow-up; you confirmed. Conference was Oct 27–30, 2025.",
-    isNew: false,
-    timeline: [
-      { date: "Sep 4", who: "Lee", cls: "lee" },
-      { date: "Sep 4", who: "Brian", cls: "them" },
-      { date: "Sep 8", who: "You", cls: "you" },
-      { date: "Sep 8", who: "Kristen ✓", cls: "them" },
-      { date: "Sep 9", who: "You", cls: "you" },
-    ],
-    draft: `Hi Brian and Kristen,
-
-I hope you're both doing well! I've been meaning to reach out since the Jackson Hole convening. I wanted to say what a genuinely special experience 4mul8 was — the format, the people, the conversations. It's unlike anything else I've attended.
-
-I'd love to stay connected and learn more about what comes next for the community. And if there's anything I can do to contribute — whether for a future cohort or otherwise — please don't hesitate to reach out.
-
-Thank you both for what you've built.
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 7,
-    name: "Charles Lattarulo, PhD",
-    title: "Senior Behavioral Health Leader, American Express",
-    email: "Charles.J.lattarulo@aexp.com",
-    introduced: "Aug 14, 2025",
-    introducer: "Lee Lewis",
-    why: "Widely regarded expert in employer-sponsored behavioral health strategy and benefit design at one of the largest self-insured employers in the US. Lee connected you following new publications on suicidality outcomes in advanced behavioral health — this is a high-value, high-credibility potential champion for Enthea inside large employers.",
-    responded: true,
-    lastEmail: "Aug 19, 2025",
-    lastActor: "you",
-    turn: "active",
-    turnNote: "Michael DeNichilo (Charles's EA) provided availability slots Aug 19. Likely connected, but no follow-up visible.",
-    isNew: false,
-    timeline: [
-      { date: "Aug 14", who: "Lee", cls: "lee" },
-      { date: "Aug 18", who: "You", cls: "you" },
-      { date: "Aug 19", who: "Charles", cls: "them" },
-      { date: "Aug 19", who: "You", cls: "you" },
-      { date: "Aug 19", who: "Michael EA ✓", cls: "them" },
-    ],
-    draft: `Hi Charles,
-
-I hope you've been well! I wanted to reach out to follow up on the great momentum we had after Lee connected us.
-
-I'd love to reconnect and share where things stand at Enthea — we've made meaningful progress on the employer access and outcomes side since we last spoke, and I think there's a lot of alignment worth exploring given your expertise in employer behavioral health strategy.
-
-Would you or Michael be open to finding 30 minutes in the coming weeks?
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 8,
-    name: "Lindsey Conon + Fiona Watkinson",
-    title: "VP Strategic Alliances + Clinical Partnerships, Spring Health",
-    email: "lindsey.conon@springhealth.com",
-    introduced: "Aug 14, 2025",
-    introducer: "Lee Lewis",
-    why: "Spring Health is one of the fastest-growing supplemental employer behavioral health networks. Lee connected you to explore positioning Enthea's acute, treatment-resistant network as an escalation pathway within Spring Health's employer-sponsored platform. Lindsey noted Enthea was getting mentioned from multiple directions — strong signal of fit.",
-    responded: true,
-    lastEmail: "Sep 18, 2025",
-    lastActor: "them",
-    turn: "yours",
-    turnNote: "Lindsey followed up Sep 18 asking for availability for a follow-on discussion. You never replied.",
-    isNew: false,
-    timeline: [
-      { date: "Aug 14", who: "Lee", cls: "lee" },
-      { date: "Aug 15", who: "Lindsey", cls: "them" },
-      { date: "Aug 18", who: "You", cls: "you" },
-      { date: "Aug 19", who: "Lindsey", cls: "them" },
-      { date: "Sep 18", who: "Lindsey ✉", cls: "them" },
-    ],
-    draft: `Hi Lindsey (and Fiona),
-
-I am so sorry for dropping the ball on your September follow-up. I saw your email and then the following weeks got away from me entirely — no excuse, and I apologize.
-
-I remain very enthusiastic about exploring what a Spring Health + Enthea partnership could look like. The alignment Lee described — Enthea as an escalation pathway for treatment-resistant and substance-use cases within your employer network — still feels exactly right.
-
-Would you be open to getting something on the calendar? I'm flexible and happy to work around your schedule.
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 9,
-    name: "Chirag Shah",
-    title: "Partner, Define VC",
-    email: "chirag@definevc.com",
-    introduced: "Jul 29, 2025",
-    introducer: "Lee Lewis",
-    why: "Partner at Define VC, the largest healthcare-focused venture fund in the US. Lee connected you with a strong pitch around employer demand and remaining capacity in your current round. Chirag responded immediately and positively.",
-    responded: true,
-    lastEmail: "Jul 30, 2025",
-    lastActor: "them",
-    turn: "yours",
-    turnNote: "Both you and Chirag expressed eagerness to connect Jul 30. No further emails visible — call may have happened, but no follow-up documented.",
-    isNew: false,
-    timeline: [
-      { date: "Jul 29", who: "Lee", cls: "lee" },
-      { date: "Jul 29", who: "Chirag", cls: "them" },
-      { date: "Jul 30", who: "You", cls: "you" },
-      { date: "Jul 30", who: "Chirag ✓", cls: "them" },
-    ],
-    draft: `Hi Chirag,
-
-I hope you've been well since we connected over the summer! I wanted to reach out and see if there's still a good time for us to connect properly — I know things got a bit quiet on my end.
-
-Enthea has been moving fast since then, and I'd love to walk you through where we are today — particularly on the employer traction side and what we're building through the Theralta network.
-
-Are you open to a 30-minute conversation? I'm happy to send over a brief deck ahead of time if that's helpful.
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 10,
-    name: "Jana West & Darrell Moon",
-    title: "Orriant — Employer Healthcare Navigation & Theralta Front Door",
-    email: "jana.west@orriant.com · darrell@orriant.com",
-    introduced: "Mar 31, 2025",
-    introducer: "Lee Lewis",
-    why: "Orriant is the front-door navigation and referral platform embedded in Theralta — meaning they are the first point of member contact that would route people to Enthea. A live and active operational partnership. Tara Meade confirmed a call was held Apr 9.",
-    responded: true,
-    lastEmail: "Apr 10, 2025",
-    lastActor: "them",
-    turn: "active",
-    turnNote: "Tara (COO) sent warm follow-up Apr 10 after the intro call. Active Theralta integration partner.",
-    isNew: false,
-    timeline: [
-      { date: "Mar 31", who: "Lee", cls: "lee" },
-      { date: "Mar 31", who: "Darrell", cls: "them" },
-      { date: "Apr 1", who: "You", cls: "you" },
-      { date: "Apr 1", who: "Tara ✓", cls: "them" },
-      { date: "Apr 10", who: "Tara ✉", cls: "them" },
-    ],
-    draft: `Hi Darrell, Jana, and Tara,
-
-I hope the Theralta integration work continues to move forward well! I wanted to reach out to stay in touch and make sure we're as coordinated as possible on the Enthea side.
-
-Is there anything you need from us right now to support onboarding, employer education, or the referral workflow? I want to make sure we're making your job as easy as possible.
-
-Also happy to jump on a call anytime — just let me know what works.
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 11,
-    name: "Chad Gray",
-    title: "Specialist, IMC — Chronic & Back Pain",
-    email: "chad.gray@imcpt.com",
-    introduced: "Jan 28, 2025",
-    introducer: "Lee Lewis",
-    why: "Lee connected Chad to evaluate and help Sherry's own 20-year back pain issue AND to establish a referral relationship for Enthea's Theralta bundle (IMC handles chronic/mechanical pain). They connected and had a clinical consultation; Chad shared exercises. Also overlapping interest in Validation Institute.",
-    responded: true,
-    lastEmail: "Feb 13, 2025",
-    lastActor: "you",
-    turn: "active",
-    turnNote: "Had actual calls and clinical consultation. Active relationship — both personal and professional.",
-    isNew: false,
-    timeline: [
-      { date: "Jan 28", who: "Lee", cls: "lee" },
-      { date: "Jan 28", who: "Chad", cls: "them" },
-      { date: "Jan 28", who: "You", cls: "you" },
-      { date: "Feb 10", who: "Call ✓", cls: "" },
-      { date: "Feb 13", who: "You", cls: "you" },
-    ],
-    draft: `Hi Chad,
-
-I hope you've been well! I've been (trying to) keep up with the exercises — no judgment please 😄 — and wanted to check in both personally and professionally.
-
-On the personal side, would love to schedule a follow-up at some point and share how things have been progressing.
-
-On the professional side, now that Enthea is more deeply integrated into the Theralta network alongside IMC, I'd love to explore how we can make sure our referral pathways are as smooth as possible for members who might benefit from both of our services.
-
-Would you be open to a quick call?
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 12,
-    name: "Noreen Sussman & Nancy Smith",
-    title: "Transperra Benefits — Theralta TPA",
-    email: "noreen.sussman@transperrabenefits.com · nancy.smith@advisoryha.com",
-    introduced: "Mar 10, 2025",
-    introducer: "Lee Lewis",
-    why: "Transperra is one of the TPAs in the Theralta network with direct access to Enthea. Noreen and Nancy wanted to review clinical evidence, indications, and insurance/network barriers for advanced behavioral health therapies — important for employer adoption.",
-    responded: true,
-    lastEmail: "Mar 14, 2025",
-    lastActor: "you",
-    turn: "theirs",
-    turnNote: "You responded Mar 14 enthusiastically and offered to connect. No visible reply from Noreen/Nancy.",
-    isNew: false,
-    timeline: [
-      { date: "Mar 10", who: "Lee", cls: "lee" },
-      { date: "Mar 14", who: "You", cls: "you" },
-    ],
-    draft: `Hi Noreen and Nancy,
-
-I hope you're both doing well! I wanted to follow up on Lee's introduction earlier this year — I know things get busy and I wanted to make sure we didn't miss the chance to connect.
-
-I'd love to walk you through the clinical evidence behind the treatments we offer, and talk through any questions you might have on the insurance and network side. As a Theralta TPA, I want to make sure you have everything you need to feel confident about Enthea as part of your offering.
-
-Would you be open to finding 30 minutes in the coming weeks?
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 13,
-    name: "Diana Dimon",
-    title: "Industry Leader, EY — Healthcare & Mental Health Innovation",
-    email: "diana.dimon@ey.com",
-    introduced: "Jun 25, 2025",
-    introducer: "Lee Lewis",
-    why: "Long-time collaborator of Lee's with deep experience in healthcare and mental health innovation. Connected to explore advanced and difficult-to-access therapies, including applications for cancer patients and families. Her husband Jim was battling cancer and passed away Jan 12, 2026 — this relationship requires great sensitivity.",
-    responded: true,
-    lastEmail: "Apr 7, 2026",
-    lastActor: "you",
-    turn: "theirs",
-    turnNote: "You sent a sensitive 'Thinking of you' email Apr 7 acknowledging Jim's passing. Diana hasn't replied. Give her space — she's grieving.",
-    isNew: false,
-    timeline: [
-      { date: "Jun 25", who: "Lee", cls: "lee" },
-      { date: "Jun 26", who: "You", cls: "you" },
-      { date: "Jul 11", who: "Diana", cls: "them" },
-      { date: "Jul 13", who: "You", cls: "you" },
-      { date: "Aug 20", who: "You (call)", cls: "you" },
-      { date: "Jan 27", who: "You", cls: "you" },
-      { date: "Feb 2", who: "Diana", cls: "them" },
-      { date: "Feb 24", who: "You", cls: "you" },
-      { date: "Apr 7", who: "You ♥", cls: "you" },
-    ],
-    draft: `Hi Diana,
-
-I hope you're doing okay and finding moments of peace and light. I've been thinking of you.
-
-I just wanted you to know I'm here whenever you're ready — whether that means talking about work, or just catching up. No agenda, no rush. 
-
-I hope the coming weeks are a little gentler.
-
-With warmth,
-Sherry`
-  },
-  {
-    id: 14,
-    name: "John Sbrocco",
-    title: "CEO, Virtue Alliance",
-    email: "john@virtuealliance.com",
-    introduced: "Jul 28, 2025",
-    introducer: "Lee Lewis (via Molly/Enthea intro)",
-    why: "Leads Virtue Alliance health plans across dozens of brokers and hosts the Heads Up Adviser podcast. A high-reach distribution channel for Enthea messaging. You were invited to appear as a podcast guest — recorded Oct 14, 2025.",
-    responded: true,
-    lastEmail: "Oct 14, 2025",
-    lastActor: "them",
-    turn: "yours",
-    turnNote: "Podcast was recorded Oct 14, 2025. You emailed John Apr 19 on a separate note but got an OOO. No direct follow-up on the podcast or relationship.",
-    isNew: false,
-    timeline: [
-      { date: "Jul 28", who: "Lee", cls: "lee" },
-      { date: "Jul 30", who: "Molly", cls: "you" },
-      { date: "Jul 31", who: "You", cls: "you" },
-      { date: "Sep 30", who: "Trinny (VA)", cls: "them" },
-      { date: "Oct 14", who: "Recorded ✓", cls: "them" },
-    ],
-    draft: `Hi John,
-
-I hope you're doing well! I wanted to reach out now that things have calmed down a bit on my end to say that I thoroughly enjoyed our conversation for Heads Up Adviser. It's such a unique and well-crafted format.
-
-I'd love to find time to connect directly — beyond the podcast — to explore whether there are ways we can support each other's work. I've been a huge fan of yours for a while, and I think there's real potential alignment between Virtue Alliance and what we're building at Enthea.
-
-Would you be open to a call sometime soon?
-
-Warmly,
-Sherry`
-  },
-  {
-    id: 15,
-    name: "MG Kristian + Maggie Fisher",
-    title: "Enlyte — Benefits & Wellness; Nonprofit for Reintegration",
-    email: "mg.kristian@enlyte.com",
-    introduced: "Apr 28, 2026",
-    introducer: "Lee Lewis",
-    why: "MG is at Enlyte (large benefits/claims company) and runs a nonprofit with her husband focused on reintegrating people into society — jobs, housing, stability. Lee sees strong alignment with Enthea's ketamine/PTSD work for addiction and trauma populations. Maggie Fisher (Sr. Director of Benefits & Wellness at Enlyte) is involved. A call is scheduled June 17.",
-    responded: true,
-    lastEmail: "May 6, 2026",
-    lastActor: "you",
-    turn: "active",
-    turnNote: "You confirmed interest May 6. Call is scheduled June 17, 3–4pm ET. You need to confirm that time.",
-    isNew: true,
-    timeline: [
-      { date: "Apr 28", who: "Lee", cls: "lee" },
-      { date: "Apr 30", who: "Bev (HTA)", cls: "them" },
-      { date: "May 4", who: "Maggie ✓", cls: "them" },
-      { date: "May 4", who: "Bev: confirm?", cls: "them" },
-      { date: "May 6", who: "You ✓", cls: "you" },
-    ],
-    draft: `Hi Bev, Maggie, and MG,
-
-Thank you for bearing with me on the slow response! I just wanted to confirm that June 17th, 3–4pm ET works perfectly for me. Please feel free to send over the calendar invite.
-
-MG — Lee's description of your nonprofit work is genuinely moving. The intersection of reintegration, PTSD, addiction, and what we're doing at Enthea with ketamine-assisted therapy feels like it could be something really meaningful. I'm very much looking forward to our conversation.
-
-See you on the 17th!
-
-Warmly,
-Sherry`
-  }
+var data=[
+{id:1,name:"Spencer Allen",ini:"SA",org:"IOA — Insurance Office of America",email:"spencer.allen@ioausa.com",intro:"Mar 23, 2026",last:"May 11, 2026",turn:"yours",isNew:false,isUrgent:true,
+why:"SVP/Managing Partner at IOA (Insurance Office of America), one of the largest independent insurance agencies in the US. John calls him one of MindClub's greatest supporters and passionate about mental health. Very senior, well-connected broker with major employer relationships.",
+status:"Spencer asked 'Which Friday — this week or next?' on May 11. You never replied. He's waiting on you to pick a time.",
+tl:[{d:"Mar 23",w:"John",c:"john"},{d:"Mar 27",w:"You",c:"you"},{d:"Apr 17",w:"You x2",c:"you"},{d:"May 4",w:"Spencer",c:"them"},{d:"May 7",w:"You",c:"you"},{d:"May 11",w:"Spencer ✉",c:"them"}],
+draft:"Hi Spencer,\n\nI am so sorry for going quiet again — you asked which Friday and I just dropped the ball. I apologize!\n\nI would love to find a time this week or next. What does your calendar look like? I am flexible and happy to work around your schedule entirely.\n\nLooking forward to finally connecting properly!\n\nWarmly,\nSherry"},
+
+{id:2,name:"Ryan Van Etten & Scott Borden",ini:"RV",org:"WLT Software",email:"rvanetten@wltsoftware.com",intro:"Feb 24, 2026",last:"Mar 23, 2026",turn:"theirs",isNew:false,isUrgent:false,
+why:"MindClub partners at WLT Software — they support mental health solutions for their employer clients. John also connected you specifically to discuss working together on unions as a shared market. A collaboration could open employer group access through a technology partner.",
+status:"John flagged unions as a shared opportunity (Apr 17). You followed up twice in March. No reply from Ryan or Scott visible since.",
+tl:[{d:"Feb 24",w:"John",c:"john"},{d:"Mar 5",w:"You",c:"you"},{d:"Mar 23",w:"You x2",c:"you"},{d:"Apr 17",w:"John: unions",c:"john"}],
+draft:"Hi Ryan and Scott,\n\nI apologize for the slow follow-up — things have been nonstop and I kept meaning to get back properly.\n\nI remain really excited about connecting, especially now that John has flagged unions as a shared opportunity for both of us. I think there's a real overlap in what we're each building and I'd love to explore it.\n\nWould you both be open to a 30-minute call in the next couple of weeks?\n\nWarmly,\nSherry"},
+
+{id:3,name:"Dr. Bernard Bubanic",ini:"BB",org:"Integrated Source One (ISO)",email:"bernard.bubanic@intsourceone.com",intro:"Oct 21, 2025",last:"Oct 22, 2025",turn:"yours",isNew:false,isUrgent:false,
+why:"President & CEO of Integrated Source One — John's top choice for primary care strategic partnership. ISO is part of the MindClub/Enthea ecosystem. Dr. Bubanic already replied warmly and asked to set up an intro call. This is a dropped ball that needs a direct apology.",
+status:"Dr. Bubanic replied Oct 22 asking to set up a call. You never responded. It has been over 7 months.",
+tl:[{d:"Oct 21",w:"John",c:"john"},{d:"Oct 22",w:"Dr. B ✉",c:"them"}],
+draft:"Hi Dr. Bubanic (and Troy),\n\nI owe you a real apology — you graciously replied back in October asking to connect, and I completely dropped the ball. I'm sorry. It was a difficult period and that's no excuse for leaving you hanging for this long.\n\nThings have calmed down considerably, and I would genuinely love to reconnect and explore what John had in mind for our organizations. He speaks so highly of you and ISO, and I think there's real alignment worth exploring.\n\nWould you be open to a call? I'm flexible and happy to work around your schedule.\n\nWarmly,\nSherry"},
+
+{id:4,name:"Tim Hawley",ini:"TH",org:"Exemplar Insurance Associates",email:"tim.hawley@exemplarinsuranceassociates.com",intro:"May 12, 2026",last:"May 18, 2026",turn:"yours",isNew:true,isUrgent:false,
+why:"CEO of Exemplar Insurance Associates and part of the ISO network as their mental health solution partner. Has a personal interest in psychedelic therapy AND is extremely well-connected — John flagged he could open a lot of doors. Jessica had an initial call (someone else joined unexpectedly). You've planned to reach out personally about his own interest in psychedelic therapy.",
+status:"Jessica met with him May 18 and shared solutions. You planned to reach out personally re: his own interest in psychedelic therapy. Haven't done so yet.",
+tl:[{d:"May 12",w:"John",c:"john"},{d:"May 12",w:"Jessica",c:"you"},{d:"May 13",w:"You (plan)",c:"you"},{d:"May 18",w:"Jessica met",c:"you"}],
+draft:"Hi Tim,\n\nSo great that you and Jessica connected! I wanted to reach out personally as well — John mentioned you have a genuine personal interest in psychedelic therapy, and that resonated with me.\n\nI'd love to connect one-on-one to talk through both the personal and the professional sides of what we're doing at Enthea. The conversations that start from a place of real curiosity tend to be the best ones.\n\nWould you have 20–30 minutes in the coming week or two?\n\nWarmly,\nSherry"},
+
+{id:5,name:"Laurence Turell",ini:"LT",org:"National Financial (NatFin)",email:"lturell@natfin.net",intro:"Apr 2026 (John) / Sep 2025 (you first)",last:"Sep 12, 2025",turn:"theirs",isNew:false,isUrgent:false,
+why:"Helps business owners save money by redesigning employee benefits. You actually reached out to him first in September 2025 with a full Enthea overview — ketamine-assisted therapy, stellate ganglion block, outcomes data (86% PTSD reduction, 67% depression, 65% anxiety), referral program. Now John has also introduced you, creating a second warm touchpoint.",
+status:"You sent a detailed Enthea overview Sep 12, 2025 and never heard back. John's April intro gives you a fresh, non-awkward reason to re-engage.",
+tl:[{d:"Sep 8",w:"You first",c:"you"},{d:"Sep 12",w:"You: overview",c:"you"},{d:"Apr 2026",w:"John intro",c:"john"}],
+draft:"Hi Laurence,\n\nJohn Troutman recently connected us, and I realized I had actually reached out to you back in September with some information about Enthea — so we've been circling each other for a while!\n\nI'd love to take a fresh run at connecting properly. Given that you help business owners redesign employee benefits, I think our work — advanced behavioral health therapies for employees, including ketamine-assisted therapy and treatments for PTSD, depression, and anxiety — is exactly the kind of thing that could be meaningful to your clients.\n\nWould you be open to a 20-minute call?\n\nWarmly,\nSherry"},
+
+{id:6,name:"Bobby Marulli",ini:"BM",org:"Diabetes Reversal Group (DRG)",email:"bmarulli@diabetesreversalgroup.com",intro:"Apr/May 2026 (John)",last:"May 18, 2026",turn:"scheduled",isNew:false,isUrgent:false,
+why:"DRG is MindClub's partner for reversing Type 2 diabetes through lifestyle and clinical intervention. Bobby reached out proactively (sent a LinkedIn event replay in Feb), replied enthusiastically when introduced, and has a call already booked. Metabolic health and mental health are deeply connected — strong synergy with Enthea.",
+status:"Call scheduled June 3, 2026 at 11am–11:30am EDT. Bobby accepted the invite. ✅ No action needed.",
+tl:[{d:"Feb 17",w:"Bobby (LinkedIn)",c:"them"},{d:"May 18",w:"You: invite",c:"you"},{d:"May 18",w:"Bobby ✓",c:"them"},{d:"Jun 3",w:"Call 🗓",c:"sched"}],
+draft:"Hi Bobby,\n\nLooking forward to our call on June 3rd! Just wanted to send a quick note ahead of time — I've been following what DRG is doing and I think the intersection of metabolic health and mental/behavioral health is one of the most underexplored areas in employer wellness right now.\n\nI'm excited to learn more about your work and share what we're doing at Enthea. See you on the 3rd!\n\nWarmly,\nSherry"},
+
+{id:7,name:"Paula Segal, MHA",ini:"PS",org:"ClearGuide Advisors",email:"paula@clearguideadvisors.com",intro:"Jan 2026 (John)",last:"Jan 13, 2026",turn:"active",isNew:false,isUrgent:false,
+why:"Medicare advisor for retiring professionals in NJ and PA with 20+ years in employer benefits and health plan strategy. John saw wellness space synergy. Paula gave you her personal cell (215-880-8343) and accepted a call — conversation moved to text/phone.",
+status:"Call was Jan 13, 2026 at 11am PT. Paula accepted and gave you her cell. Relationship moved to phone/text — likely active but no email trail to confirm next steps.",
+tl:[{d:"Jan 2026",w:"John",c:"john"},{d:"Jan 13",w:"Call ✓",c:"sched"}],
+draft:"Hi Paula,\n\nI hope you've been well since we connected in January! I wanted to reach out and check in — I'd love to hear how things are going on your end and see if there are any ways we can support each other.\n\nAs Enthea continues to grow our employer footprint, I keep thinking about the retiring and transitioning employee population and how our services could be relevant there. Would love to reconnect for a quick catch-up.\n\nWarmly,\nSherry"},
+
+{id:8,name:"Ryan Cain + College Intros",ini:"RC",org:"MindClub America",email:"rcain@mindclubamerica.com",intro:"Apr 23 & Apr 28, 2026",last:"Apr 28, 2026",turn:"yours",isNew:true,isUrgent:false,
+why:"John sent two separate 'College Intros / Enthea Intro' meeting invites including Ryan Cain (MindClub) and Sherry — appears to be a group introduction call to a set of college-affiliated contacts. The nature of these intros isn't fully clear from the email snippets — likely mental health contacts in higher education or college sports.",
+status:"Two Teams meeting invites sent (Apr 23 and Apr 28). No visible reply or confirmation from you. Worth clarifying with John what these intros are.",
+tl:[{d:"Apr 23",w:"John: invite",c:"john"},{d:"Apr 28",w:"John: invite 2",c:"john"}],
+draft:"Hi John,\n\nI wanted to follow up on the College Intros / Enthea Intro meetings you set up in late April — I want to make sure I didn't miss anything and that Ryan and I are coordinated on any follow-up.\n\nCould you give me a quick reminder on who those introductions were with and what the best next step is? I want to make sure I give these the proper attention.\n\nThank you!\n\nWarmly,\nSherry"}
 ];
 
-function getTurnClass(t) {
-  if (t === 'yours') return 'badge-warn';
-  if (t === 'theirs') return 'badge-theirs';
-  if (t === 'active') return 'badge-done';
-  return 'badge-done';
-}
-function getTurnLabel(t) {
-  if (t === 'yours') return 'Your Turn';
-  if (t === 'theirs') return "Their Turn";
-  if (t === 'active') return 'Active';
-  return 'Active';
-}
+function pclass(t){return t==="yours"?"pill-yours":t==="theirs"?"pill-theirs":t==="scheduled"?"pill-scheduled":"pill-active";}
+function plabel(t){return t==="yours"?"Your Turn":t==="theirs"?"Their Turn":t==="scheduled"?"Scheduled":"Active";}
 
-function renderCards(filter = 'all') {
-  const container = document.getElementById('cards-container');
-  container.innerHTML = '';
-  let yours = 0, theirs = 0, active = 0;
-  contacts.forEach(c => {
-    if (c.turn === 'yours') yours++;
-    else if (c.turn === 'theirs') theirs++;
-    else active++;
+function render(f){
+  var list=document.getElementById("list");
+  list.innerHTML="";
+  var y=0,t=0,a=0;
+  data.forEach(function(c){
+    if(c.turn==="yours")y++;
+    else if(c.turn==="theirs")t++;
+    else a++;
   });
-  document.getElementById('yours-count').textContent = yours;
-  document.getElementById('theirs-count').textContent = theirs;
-  document.getElementById('active-count').textContent = active;
-
-  contacts.forEach((c, idx) => {
-    const show = filter === 'all'
-      || (filter === 'yours' && c.turn === 'yours')
-      || (filter === 'theirs' && c.turn === 'theirs')
-      || (filter === 'active' && c.turn === 'active')
-      || (filter === 'new' && c.isNew);
-
-    const div = document.createElement('div');
-    div.className = 'card' + (show ? '' : ' hidden');
-    div.style.animationDelay = (idx * 0.04) + 's';
-    div.dataset.filter = c.turn;
-    div.dataset.new = c.isNew;
-
-    const tl = c.timeline.map(t => `
-      <div class="timeline-event">
-        <div class="timeline-dot ${t.cls}"></div>
-        <div class="timeline-date">${t.date}</div>
-        <div class="timeline-who">${t.who}</div>
-      </div>`).join('');
-
-    div.innerHTML = `
-      <div class="card-header" onclick="toggleCard(this)">
-        <div>
-          <div class="person-info">
-            <div class="person-name">${c.name} ${c.isNew ? '<span class="new-tag">New</span>' : ''}</div>
-            <div class="person-title">${c.title}</div>
-            <div class="person-email">${c.email}</div>
-          </div>
-        </div>
-        <div class="card-badges">
-          <span class="badge ${getTurnClass(c.turn)}">
-            <span class="badge-dot"></span>${getTurnLabel(c.turn)}
-          </span>
-          <div class="date-badge">Introduced: ${c.introduced}<br>Last email: ${c.lastEmail}</div>
-        </div>
-        <div class="expand-icon">▾</div>
-      </div>
-      <div class="card-body">
-        <div class="card-grid">
-          <div class="card-section">
-            <div class="section-label">Why You'd Want to Connect</div>
-            <div class="section-text">${c.why}</div>
-          </div>
-          <div class="card-section">
-            <div class="section-label">Status &amp; Next Step</div>
-            <div class="section-text"><strong>Turn:</strong> ${getTurnLabel(c.turn)}<br><br>${c.turnNote}</div>
-          </div>
-        </div>
-        <div class="card-timeline">
-          ${tl}
-        </div>
-        <div class="card-draft">
-          <div class="draft-header">
-            <div class="draft-title">✉ Draft Follow-Up</div>
-            <button class="copy-btn" onclick="copyDraft(this, ${c.id})">Copy Draft</button>
-          </div>
-          <div class="draft-box" id="draft-${c.id}">${c.draft}</div>
-        </div>
-      </div>`;
-    container.appendChild(div);
+  document.getElementById("sc-yours").textContent=y;
+  document.getElementById("sc-theirs").textContent=t;
+  document.getElementById("sc-active").textContent=a;
+  data.forEach(function(c){
+    var show=f==="all"
+      ||(f==="yours"&&c.turn==="yours")
+      ||(f==="theirs"&&c.turn==="theirs")
+      ||(f==="active"&&c.turn==="active")
+      ||(f==="scheduled"&&c.turn==="scheduled");
+    var div=document.createElement("div");
+    div.className="card"+(show?"":" hidden");
+    var tl=c.tl.map(function(e){return'<div class="tl-ev"><div class="tl-dot '+e.c+'"></div><div class="tl-date">'+e.d+'</div><div class="tl-who">'+e.w+'</div></div>';}).join("");
+    var tags='';
+    if(c.isNew) tags+='<span class="new-tag">New</span>';
+    if(c.isUrgent) tags+='<span class="urgent-tag">⚡ Reply Now</span>';
+    div.innerHTML='<div class="card-top" onclick="tog(this)"><div class="avatar">'+c.ini+'</div><div class="card-info"><div class="card-name">'+c.name+tags+'</div><div class="card-org">'+c.org+'</div><div class="card-date">Intro: '+c.intro+' · Last: '+c.last+'</div></div><div class="card-right"><span class="pill '+pclass(c.turn)+'"><span class="pill-dot"></span>'+plabel(c.turn)+'</span><span class="chevron">&#9662;</span></div></div><div class="card-body"><div class="section"><div class="slabel">Why Connect</div><div class="stext">'+c.why+'</div></div><div class="section"><div class="slabel">Status &amp; Next Step</div><div class="stext"><strong>'+plabel(c.turn)+'</strong> &mdash; '+c.status+'</div></div><div class="tl">'+tl+'</div><div class="draft-section"><div class="draft-hdr"><div class="slabel" style="margin:0">&#9993; Draft</div><button class="copy-btn" onclick="cp(event,'+c.id+')">Copy</button></div><div class="draft-box" id="d'+c.id+'">'+c.draft+'</div></div></div>';
+    list.appendChild(div);
   });
 }
 
-function toggleCard(header) {
-  const card = header.closest('.card');
-  card.classList.toggle('expanded');
+function tog(el){el.closest(".card").classList.toggle("open");}
+
+function cp(e,id){
+  e.stopPropagation();
+  var btn=e.target;
+  var text=document.getElementById("d"+id).textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent="Copied!";btn.classList.add("copied");
+      setTimeout(function(){btn.textContent="Copy";btn.classList.remove("copied");},2000);
+    });
+  } else {
+    var ta=document.createElement("textarea");
+    ta.value=text;ta.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0;";
+    document.body.appendChild(ta);ta.focus();ta.select();
+    try{document.execCommand("copy");}catch(err){}
+    document.body.removeChild(ta);
+    btn.textContent="Copied!";btn.classList.add("copied");
+    setTimeout(function(){btn.textContent="Copy";btn.classList.remove("copied");},2000);
+  }
 }
 
-function copyDraft(btn, id) {
-  const text = document.getElementById('draft-' + id).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'Copy Draft';
-      btn.classList.remove('copied');
-    }, 2000);
-  });
-}
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    renderCards(this.dataset.filter);
+document.querySelectorAll(".fp").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".fp").forEach(function(x){x.classList.remove("active");});
+    this.classList.add("active");render(this.dataset.f);
   });
 });
 
-renderCards('all');
+render("all");
 </script>
 </body>
 </html>
